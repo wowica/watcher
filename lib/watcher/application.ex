@@ -17,9 +17,10 @@ defmodule Watcher.Application do
       # Start Finch
       {Finch, name: Watcher.Finch},
       # Start the Endpoint (http/https)
-      WatcherWeb.Endpoint
+      WatcherWeb.Endpoint,
       # Start a worker by calling: Watcher.Worker.start_link(arg)
-      # {Watcher.Worker, arg}
+      # {Watcher.Worker, arg},
+      Watcher.StreamConsumer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
