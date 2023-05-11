@@ -9,20 +9,29 @@ defmodule Watcher.StreamConsumer do
   end
 
   def init(_opts) do
-    {:ok, %{host: redis_host(), stream_name: redis_stream_name()}, {:continue, :listen}}
+    {:ok,
+     %{
+       host: redis_host(),
+       stream_name: redis_stream_name()
+     }, {:continue, :listen}}
   end
 
-  def handle_continue(:listen, %{host: host, stream_name: stream_name} = _state) do
+  def handle_continue(:listen, %{host: host, stream_name: stream_name} = state) do
     {:ok, conn} = Redix.start_link(host)
 
     Redix.Stream.Consumer.start_link(conn, stream_name, {__MODULE__, :consume, []})
 
-    {:noreply, %{}}
+    {:noreply, state}
   end
 
   def consume(_stream, _id, %{"txoutput" => content} = _txoutput) do
-    # Logger.info("Got txoutput #{inspect(txoutput)} from stream")
-    %{"tx_output" => %{"address" => address, "amount" => amount}} = Jason.decode!(content)
+    %{
+      "tx_output" => %{
+        "address" => address,
+        "amount" => amount
+      }
+    } = Jason.decode!(content)
+
     Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA")
   end
 
