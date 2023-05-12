@@ -1,6 +1,6 @@
 # Watcher
 
-A Dashboard for monitoring cardano addresses.
+A Dashboard for monitoring Cardano addresses. Reads chain data from a Redis stream populated by [Oura](https://github.com/txpipe/oura).
 
 ## Running
 
@@ -11,3 +11,5 @@ A Dashboard for monitoring cardano addresses.
 
 
 For the time being, it simply logs when a given address receives any ADA.
+
+![](docs/screenshot.png)
