@@ -52,7 +52,8 @@ defmodule Watcher.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:redix, "~> 1.2"},
       {:redix_stream, git: "https://github.com/adampointer/redix_stream"},
-      {:heroicons, "~> 0.5.0"}
+      {:heroicons, "~> 0.5.0"},
+      {:number, "~> 1.0"}
     ]
   end
 
