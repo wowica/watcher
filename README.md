@@ -10,6 +10,6 @@ A Dashboard for monitoring Cardano addresses. Reads chain data from a Redis stre
 * Start the app with `iex -S mix`
 
 
-For the time being, it simply logs when a given address receives any ADA.
+For the time being, it simply displays addresses receiving ADA along with the amount of the transfer.
 
 ![](docs/screenshot.png)
