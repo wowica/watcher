@@ -90,6 +90,9 @@ defmodule WatcherWeb do
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
+      # Helper functions for formatting view content
+      alias WatcherWeb.ViewHelper
+
       # Routes generation with the ~p sigil
       unquote(verified_routes())
     end

@@ -1,17 +1,47 @@
-<h1>Transactions</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Address</th>
-      <th>Amount</th>
-    </tr>
-  </thead>
-  <tbody id="transactions">
-    <%= for {address, amount} <- @transactions do %>
-      <tr>
-        <td><%= String.slice(address, 0..15) <> "..." <> String.slice(address, -15..-1) %></td>
-        <td><%= div(amount, 1_000_000) %> ADA</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="flex items-center justify-between py-3 text-sm">
+  <h1 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+    Transactions
+  </h1>
+
+  <div>
+    <span class="inline-block sm:text-sml font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+      Last updated:
+    </span>
+    <span class="sm:text-xs"><%= @last_updated_at %></span>
+  </div>
+</div>
+
+<div class="relative rounded-xl overflow-auto">
+  <div class="shadow-sm overflow-hidden my-8">
+    <table class="border-collapse table-auto w-full text-sm">
+      <thead>
+        <tr>
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+            Receiving Address
+          </th>
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+            Amount
+          </th>
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+            Date (UTC)
+          </th>
+        </tr>
+      </thead>
+      <tbody id="transactions">
+        <%= for {address, amount, timestamp} <- @transactions do %>
+          <tr class="dark:bg-slate-800">
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              <%= ViewHelper.format_address(address) %>
+            </td>
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              <%= ViewHelper.format_amount(amount) %>
+            </td>
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+              <%= ViewHelper.format_date(timestamp) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
