@@ -31,7 +31,13 @@
         <%= for {address, amount, timestamp} <- @transactions do %>
           <tr class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-              <%= ViewHelper.format_address(address) %>
+              <a
+                href={"https://cexplorer.io/address/#{address}/tx"}
+                class="hover:underline"
+                target="_blank"
+              >
+                <%= ViewHelper.format_address(address) %>
+              </a>
             </td>
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
               <%= ViewHelper.format_amount(amount) %>
