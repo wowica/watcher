@@ -1,6 +1,8 @@
 defmodule Watcher.StreamConsumer do
   use GenServer
 
+  alias Watcher.TxParser
+
   require Logger
 
   def start_link(opts \\ []) do
@@ -24,20 +26,8 @@ defmodule Watcher.StreamConsumer do
     {:noreply, state}
   end
 
-  def consume(_stream, _id, %{"txoutput" => content} = _txoutput) do
-    %{
-      "tx_output" => %{
-        "address" => address,
-        "amount" => amount
-      }
-    } = Jason.decode!(content)
-
-    Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA")
-  end
-
-  def consume(_stream, _id, _values) do
-    Logger.info("Got message from stream")
-  end
+  def consume(_stream, _id, payload),
+    do: TxParser.parse(payload)
 
   defp redis_host do
     Application.fetch_env!(:watcher, __MODULE__)

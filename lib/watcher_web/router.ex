@@ -17,7 +17,7 @@ defmodule WatcherWeb.Router do
   scope "/", WatcherWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", DashboardLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

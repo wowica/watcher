@@ -1,0 +1,17 @@
+<h1>Transactions</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Address</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody id="transactions">
+    <%= for {address, amount} <- @transactions do %>
+      <tr>
+        <td><%= String.slice(address, 0..15) <> "..." <> String.slice(address, -15..-1) %></td>
+        <td><%= div(amount, 1_000_000) %> ADA</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
