@@ -1,4 +1,5 @@
 defmodule Watcher.TxParser do
+  alias Watcher.Dashboard
   require Logger
 
   def parse(%{"txoutput" => content} = _payload) do
@@ -12,11 +13,12 @@ defmodule Watcher.TxParser do
       }
     } = Jason.decode!(content)
 
-    tx = %{address: address, amount: amount, timestamp: timestamp}
+    Dashboard.create_transfer!(address, amount, timestamp)
+    |> Dashboard.broadcast_tx_update()
 
-    Watcher.Dashboard.broadcast_tx_update(tx)
+    Dashboard.trim_records()
 
-    Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA")
+    Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA at #{timestamp}")
   end
 
   def parse(payload) do
