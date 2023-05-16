@@ -12,12 +12,12 @@
 </div>
 
 <div class="sm:block md:hidden mb-5">
-  <h1 class="px-4 inline-block text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-5">
+  <h1 class="px-4 inline-block text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
     Transactions
   </h1>
 
   <div>
-    <span class="px-4 inline-block font-bold text-slate-200 tracking-tight dark:text-slate-100 text-sm">
+    <span class="px-4 inline-block font-bold tracking-tight dark:text-slate-100 text-sm">
       Last updated:
     </span>
     <span class="text-xs"><%= @last_updated_at %></span>
@@ -29,13 +29,13 @@
     <table class="border-collapse table-auto w-full text-sm">
       <thead>
         <tr>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
             Receiving Address
           </th>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
             Amount
           </th>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
             Date (UTC)
           </th>
         </tr>
@@ -43,7 +43,7 @@
       <tbody id="transactions">
         <%= for {address, amount, timestamp} <- @transactions do %>
           <tr class="dark:bg-slate-800">
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
               <a
                 href={"https://cexplorer.io/address/#{address}/tx"}
                 class="hover:underline"
@@ -52,10 +52,10 @@
                 <%= ViewHelper.format_address(address) %>
               </a>
             </td>
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 text-slate-500 dark:text-slate-400">
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 dark:text-slate-400">
               <%= ViewHelper.format_amount(amount) %> ADA
             </td>
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
+            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
               <%= ViewHelper.format_date(timestamp) %>
             </td>
           </tr>
@@ -70,7 +70,7 @@
     <tbody id="transactions">
       <%= for {address, amount, timestamp} <- @transactions do %>
         <tr class="dark:bg-slate-800 flex flex-col">
-          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400 text-small">
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400 text-small">
             <div>
               <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
                 Receiving Address:
@@ -87,13 +87,17 @@
               <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
                 Amount:
               </span>
-              <%= ViewHelper.format_amount(amount) %> ADA
+              <span class="font-bold">
+                <%= ViewHelper.format_amount(amount) %> ADA
+              </span>
             </div>
             <div class="mt-2">
               <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
                 Date (UTC):
               </span>
-              <%= ViewHelper.format_date(timestamp) %>
+              <span class="font-bold">
+                <%= ViewHelper.format_date(timestamp) %>
+              </span>
             </div>
           </td>
         </tr>
