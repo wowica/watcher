@@ -13,3 +13,18 @@ A Dashboard for monitoring Cardano addresses. Reads chain data from a Redis stre
 For the time being, it simply displays addresses receiving ADA along with the amount of the transfer.
 
 ![](docs/screenshot.png)
+
+## Architecture
+
+The architecture contains the following services:
+
+1. Cardano Node
+2. Oura
+3. Redis
+4. Phoenix
+
+![](docs/watcher-architecture.png)
+
+Chain data from a local [Cardano Node](https://github.com/input-output-hk/cardano-node) is read by [Oura](https://github.com/txpipe/oura) which has a [sink configured for Redis Streams](https://txpipe.github.io/oura/sinks/redis_streams.html). A [Phoenix server](https://www.phoenixframework.org/) subscribes to the Redis Stream and upon receiving events from the stream, it broadcasts them to [Phoenix PubSub](https://github.com/phoenixframework/phoenix_pubsub) subscribers. 
+
+The main page for the dashboard is a LiveView which is a subscriber to PubSub. Upon receiving the broadcast, the LiveView updates the socket with new data which in turn updates the page.
