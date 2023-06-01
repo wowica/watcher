@@ -3,15 +3,15 @@ defmodule WatcherWeb.DashboardLive.Index do
 
   require Logger
 
+  alias Watcher.Dashboard
+
   @impl true
   def mount(_params, _session, socket) do
     txs =
       if connected?(socket) do
-        Watcher.Dashboard.subscribe_to_tx()
+        Dashboard.subscribe_to_tx()
 
-        Watcher.Transfer
-        |> Watcher.Repo.all()
-        |> Enum.map(&{&1.receiving_address, &1.amount, &1.timestamp})
+        Dashboard.list_transfers_formatted()
       end
 
     {:ok,

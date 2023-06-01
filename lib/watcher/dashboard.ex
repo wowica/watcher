@@ -46,4 +46,10 @@ defmodule Watcher.Dashboard do
     from(t in Transfer, where: t.id in ^all_above_threshold)
     |> Repo.delete_all()
   end
+
+  def list_transfers_formatted do
+    Transfer
+    |> Repo.all()
+    |> Enum.map(&{&1.receiving_address, &1.amount, &1.timestamp})
+  end
 end
