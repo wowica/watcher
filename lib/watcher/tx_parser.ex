@@ -28,6 +28,8 @@ defmodule Watcher.TxParser do
     Dashboard.create_block!(block_params)
     |> Dashboard.broadcast_block_update()
 
+    Dashboard.trim_block_records()
+
     :ok
   end
 

@@ -1,6 +1,7 @@
 defmodule Watcher.Dashboard do
   import Ecto.Query
 
+  alias Watcher.Block
   alias Watcher.PubSub
   alias Watcher.Repo
   alias Watcher.Transfer
@@ -30,15 +31,20 @@ defmodule Watcher.Dashboard do
     |> Repo.insert!()
   end
 
-  def create_block!(%{"epoch" => _epoch, "number" => _block_number} = block_params) do
-    block_params
+  def create_block!(%{"number" => block_number, "epoch" => epoch_number} = _block_params) do
+    %Block{}
+    |> Block.changeset(%{
+      block_number: block_number,
+      epoch_number: epoch_number
+    })
+    |> Repo.insert!()
   end
 
-  def broadcast_block_update(%{"epoch" => _epoch, "number" => _block_number} = block_params) do
+  def broadcast_block_update(%Block{} = block) do
     Phoenix.PubSub.broadcast(
       Watcher.PubSub,
       @pub_sub_topic,
-      {:block_updated, block_params}
+      {:block_updated, block}
     )
   end
 
@@ -63,5 +69,27 @@ defmodule Watcher.Dashboard do
     Transfer
     |> Repo.all()
     |> Enum.map(&{&1.receiving_address, &1.amount, &1.timestamp})
+  end
+
+  def get_most_recent_block_info do
+    %Block{block_number: block_number, epoch_number: epoch_number} =
+      from(b in Block, order_by: [desc: :inserted_at], limit: 1)
+      |> Repo.one()
+
+    {epoch_number, block_number}
+  end
+
+  def trim_block_records do
+    all_above_threshold =
+      from(t in Block,
+        order_by: [desc: :inserted_at],
+        offset: 1,
+        select: %{id: t.id}
+      )
+      |> Repo.all()
+      |> Enum.map(fn result -> result.id end)
+
+    from(t in Block, where: t.id in ^all_above_threshold)
+    |> Repo.delete_all()
   end
 end

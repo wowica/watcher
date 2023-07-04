@@ -3,7 +3,7 @@
     <h2 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
       Epoch
     </h2>
-    <span class="inline-block ml-3 mr-10 align-text-sub text-2xl">
+    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl">
       <%= @epoch_number %>
     </span>
   </div>
@@ -12,7 +12,27 @@
     <h2 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
       Block
     </h2>
-    <span class="inline-block ml-3 mr-10 align-text-sub text-2xl">
+    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl">
+      <%= @block_number %>
+    </span>
+  </div>
+</div>
+
+<div class="sm:block md:hidden mb-5">
+  <div>
+    <h1 class="px-4 pt-2 inline-block text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+      Epoch
+    </h1>
+    <span class="inline-block ml-3 mr-10 text-2xl">
+      <%= @epoch_number %>
+    </span>
+  </div>
+
+  <div>
+    <h1 class="px-4 pt-2 inline-block text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+      Block
+    </h1>
+    <span class="inline-block ml-3 mr-10 text-2xl">
       <%= @block_number %>
     </span>
   </div>
@@ -60,7 +80,7 @@
           </th>
         </tr>
       </thead>
-      <tbody id="transactions">
+      <tbody>
         <%= for {address, amount, timestamp} <- @transactions do %>
           <tr class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
@@ -87,7 +107,7 @@
 
 <div class="md:hidden sm:overflow-auto sm:relative">
   <table class="table-fixed">
-    <tbody id="transactions">
+    <tbody>
       <%= for {address, amount, timestamp} <- @transactions do %>
         <tr class="dark:bg-slate-800 flex flex-col">
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400 text-small">

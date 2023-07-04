@@ -7,18 +7,22 @@ defmodule WatcherWeb.DashboardLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    txs =
+    {txs, epoch_number, block_number} =
       if connected?(socket) do
         Dashboard.subscribe_to_tx()
 
-        Dashboard.list_transfers_formatted()
+        {epoch_number, block_number} = Dashboard.get_most_recent_block_info()
+
+        {Dashboard.list_transfers_formatted(), epoch_number, block_number}
+      else
+        {[], "", ""}
       end
 
     {:ok,
      socket
-     |> assign(:epoch_number, 1)
-     |> assign(:block_number, 2)
-     |> assign(:transactions, txs || [])
+     |> assign(:epoch_number, epoch_number)
+     |> assign(:block_number, block_number)
+     |> assign(:transactions, txs)
      |> assign(:last_updated_at, last_updated_at())}
   end
 
@@ -46,7 +50,11 @@ defmodule WatcherWeb.DashboardLive.Index do
 
   @impl true
   def handle_info(
-        {:block_updated, %{"epoch" => epoch_number, "number" => block_number} = _block_params},
+        {:block_updated,
+         %Watcher.Block{
+           block_number: block_number,
+           epoch_number: epoch_number
+         } = _block},
         socket
       ) do
     {:noreply,
