@@ -30,6 +30,18 @@ defmodule Watcher.Dashboard do
     |> Repo.insert!()
   end
 
+  def create_block!(%{"epoch" => _epoch, "number" => _block_number} = block_params) do
+    block_params
+  end
+
+  def broadcast_block_update(%{"epoch" => _epoch, "number" => _block_number} = block_params) do
+    Phoenix.PubSub.broadcast(
+      Watcher.PubSub,
+      @pub_sub_topic,
+      {:block_updated, block_params}
+    )
+  end
+
   # Keeps database from growing too long
   def trim_records do
     # TODO: figure out how to trim records in a single query

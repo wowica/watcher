@@ -16,6 +16,8 @@ defmodule WatcherWeb.DashboardLive.Index do
 
     {:ok,
      socket
+     |> assign(:epoch_number, 1)
+     |> assign(:block_number, 2)
      |> assign(:transactions, txs || [])
      |> assign(:last_updated_at, last_updated_at())}
   end
@@ -39,6 +41,18 @@ defmodule WatcherWeb.DashboardLive.Index do
     {:noreply,
      socket
      |> assign(:transactions, all_txs)
+     |> assign(:last_updated_at, last_updated_at())}
+  end
+
+  @impl true
+  def handle_info(
+        {:block_updated, %{"epoch" => epoch_number, "number" => block_number} = _block_params},
+        socket
+      ) do
+    {:noreply,
+     socket
+     |> assign(:epoch_number, epoch_number)
+     |> assign(:block_number, block_number)
      |> assign(:last_updated_at, last_updated_at())}
   end
 
