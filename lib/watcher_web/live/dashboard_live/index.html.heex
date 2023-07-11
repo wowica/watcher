@@ -1,18 +1,18 @@
 <div class="hidden md:block md:flex justify-left py-3 text-sm">
   <div>
-    <h2 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+    <h2 class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-10">
       Epoch
     </h2>
-    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl">
+    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl  dark:text-slate-200">
       <%= @epoch_number %>
     </span>
   </div>
 
   <div>
-    <h2 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+    <h2 class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-10">
       Block
     </h2>
-    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl">
+    <span class="inline-block ml-3 mr-10 align-text-sub text-4xl dark:text-slate-200">
       <%= @block_number %>
     </span>
   </div>
@@ -39,15 +39,15 @@
 </div>
 
 <div class="hidden md:block md:flex items-center justify-between py-3 text-sm">
-  <h2 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+  <h2 class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-10">
     Transactions
   </h2>
 
   <div>
-    <span class="inline-block sm:text-sml font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+    <span class="inline-block sm:text-sml font-extrabold tracking-tight dark:text-slate-200 mb-10">
       Last updated:
     </span>
-    <span class="sm:text-xs"><%= @last_updated_at %></span>
+    <span class="sm:text-xs dark:text-slate-200"><%= @last_updated_at %></span>
   </div>
 </div>
 
@@ -60,7 +60,7 @@
     <span class="px-4 inline-block font-bold tracking-tight dark:text-slate-100 text-sm">
       Last updated:
     </span>
-    <span class="text-xs"><%= @last_updated_at %></span>
+    <span class="text-xs dark:text-slate-200"><%= @last_updated_at %></span>
   </div>
 </div>
 
