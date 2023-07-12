@@ -1,13 +1,53 @@
+<div class="hidden md:flex justify-center py-3 text-sm">
+  <div class="flex p-8 bg-dracula-darker-800 rounded">
+    <h2 class="sm:text-3xl font-extrabold dark:text-slate-200">
+      Epoch
+    </h2>
+    <span class="ml-3 text-4xl dark:text-slate-200">
+      <%= @epoch_number %>
+    </span>
+  </div>
+
+  <div class="flex ml-5 items-center p-8 bg-dracula-darker-800 rounded">
+    <h2 class="sm:text-3xl font-extrabold dark:text-slate-200">
+      Block
+    </h2>
+    <span class="ml-3 text-4xl dark:text-slate-200">
+      <%= @block_number %>
+    </span>
+  </div>
+</div>
+
+<div class="sm:block md:hidden mb-2">
+  <div class="flex p-4 bg-dracula-darker-800 rounded">
+    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+      Epoch
+    </h1>
+    <span class="ml-3 text-3xl">
+      <%= @epoch_number %>
+    </span>
+  </div>
+
+  <div class="flex mt-2 p-4 bg-dracula-darker-800 rounded">
+    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+      Block
+    </h1>
+    <span class="ml-3 text-3xl">
+      <%= @block_number %>
+    </span>
+  </div>
+</div>
+
 <div class="hidden md:block md:flex items-center justify-between py-3 text-sm">
-  <h1 class="inline-block text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+  <h2 class="inline-block text-2xl sm:text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-10">
     Transactions
-  </h1>
+  </h2>
 
   <div>
-    <span class="inline-block sm:text-sml font-extrabold text-slate-900 tracking-tight dark:text-slate-200 mb-10">
+    <span class="inline-block sm:text-sml font-extrabold tracking-tight dark:text-slate-200 mb-10">
       Last updated:
     </span>
-    <span class="sm:text-xs"><%= @last_updated_at %></span>
+    <span class="sm:text-xs dark:text-slate-200"><%= @last_updated_at %></span>
   </div>
 </div>
 
@@ -20,7 +60,7 @@
     <span class="px-4 inline-block font-bold tracking-tight dark:text-slate-100 text-sm">
       Last updated:
     </span>
-    <span class="text-xs"><%= @last_updated_at %></span>
+    <span class="text-xs dark:text-slate-200"><%= @last_updated_at %></span>
   </div>
 </div>
 
@@ -40,7 +80,7 @@
           </th>
         </tr>
       </thead>
-      <tbody id="transactions">
+      <tbody>
         <%= for {address, amount, timestamp} <- @transactions do %>
           <tr class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
@@ -67,7 +107,7 @@
 
 <div class="md:hidden sm:overflow-auto sm:relative">
   <table class="table-fixed">
-    <tbody id="transactions">
+    <tbody>
       <%= for {address, amount, timestamp} <- @transactions do %>
         <tr class="dark:bg-slate-800 flex flex-col">
           <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400 text-small">

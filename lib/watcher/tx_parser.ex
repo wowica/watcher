@@ -18,33 +18,49 @@ defmodule Watcher.TxParser do
 
     Dashboard.trim_records()
 
-    Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA at #{timestamp}")
+    # Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA at #{timestamp}")
+    :ok
+  end
+
+  def parse(%{"block" => block_content}) do
+    %{"block" => block_params} = Jason.decode!(block_content)
+
+    Dashboard.create_block!(block_params)
+    |> Dashboard.broadcast_block_update()
+
+    Dashboard.trim_block_records()
+
+    :ok
+  end
+
+  def parse(_) do
+    :ok
   end
 
   # This function is for OuraV2
   # Strictly used for local development for the time being.
-  def parse(event_payload) do
-    # The new redis entry format for OuraV2 is a single key
-    # being the timestamp of the entry.
-    [event] = Map.values(event_payload)
+  # def parse(event_payload) do
+  #   # The new redis entry format for OuraV2 is a single key
+  #   # being the timestamp of the entry.
+  #   [event] = Map.values(event_payload)
 
-    case Jason.decode!(event) do
-      %{
-        "context" => %{"output_address" => addr},
-        "output_asset" => output_asset
-      } = _event_data_decoded
-      when not is_nil(addr) ->
-        %{"amount" => amount, "asset_ascii" => asset_name} = output_asset
-        Logger.info("address #{addr}\t amount: #{amount} #{asset_name}")
-        :ok
+  #   case Jason.decode!(event) do
+  #     %{
+  #       "context" => %{"output_address" => addr},
+  #       "output_asset" => output_asset
+  #     } = _event_data_decoded
+  #     when not is_nil(addr) ->
+  #       %{"amount" => amount, "asset_ascii" => asset_name} = output_asset
+  #       # Logger.info("address #{addr}\t amount: #{amount} #{asset_name}")
+  #       :ok
 
-      %{"tx_output" => %{"address" => addr, "amount" => amount}} ->
-        Logger.info("address #{addr}\t amount: #{amount} ADA")
-        :ok
+  #     %{"tx_output" => %{"address" => addr, "amount" => amount}} ->
+  #       # Logger.info("address #{addr}\t amount: #{amount} ADA")
+  #       :ok
 
-      decoded ->
-        Logger.info("No output address #{inspect(Map.keys(decoded))}")
-        :ok
-    end
-  end
+  #     _decoded ->
+  #       # Logger.info("No output address #{inspect(Map.keys(decoded))}")
+  #       :ok
+  #   end
+  # end
 end
