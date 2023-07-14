@@ -3,6 +3,6 @@ defmodule WatcherWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Cardano Watcher"
+    assert html_response(conn, 200) =~ "Block Explorer"
   end
 end
