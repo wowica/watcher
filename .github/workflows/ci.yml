@@ -1,0 +1,38 @@
+name: Run tests
+
+on:
+  push:
+    branches-ignore: main
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    name: CI Workflow
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: watcher_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      redis:
+        image: redis/redis-stack:6.2.6-v7
+        ports:
+          - "6379:6379"
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+      - run: mix deps.get
+      - run: mix test

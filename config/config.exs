@@ -59,6 +59,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :watcher, Watcher.StreamConsumer,
+  redis_host: System.get_env("REDIS_HOST", "redis://localhost"),
+  redis_stream_name: System.get_env("REDIS_STREAM_NAME", "watcher-node-stream")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

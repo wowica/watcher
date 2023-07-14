@@ -112,11 +112,13 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :watcher, Watcher.StreamConsumer,
+    redis_host: System.fetch_env!("REDIS_HOST"),
+    redis_stream_name: System.fetch_env!("REDIS_STREAM_NAME")
 end
 
-config :watcher, Watcher.StreamConsumer,
-  redis_host: System.fetch_env!("REDIS_HOST"),
-  redis_stream_name: System.fetch_env!("REDIS_STREAM_NAME")
-
-config :logger,
-  level: System.get_env("LOGGER_LEVEL", "info") |> String.to_existing_atom()
+if config_env() != :test do
+  config :logger,
+    level: System.get_env("LOGGER_LEVEL", "info") |> String.to_existing_atom()
+end
