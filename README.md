@@ -1,5 +1,7 @@
 # Watcher
 
+![CI Status](https://github.com/wowica/watcher/actions/workflows/ci.yml/badge.svg)
+
 A Dashboard for monitoring Cardano addresses. Reads chain data from a Redis stream populated by [Oura](https://github.com/txpipe/oura).
 
 ## Running
