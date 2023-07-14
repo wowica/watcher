@@ -15,7 +15,7 @@ kill_timeout = "5s"
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "chain-watcher.fly.dev"
+  PHX_HOST = "explorer.workwithcardano.com"
   PORT = "8080"
 
 [[services]]
