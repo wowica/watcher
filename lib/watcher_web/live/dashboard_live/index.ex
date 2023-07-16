@@ -11,11 +11,9 @@ defmodule WatcherWeb.DashboardLive.Index do
       if connected?(socket) do
         Dashboard.subscribe_to_tx()
 
-        {epoch_number, block_number} = Dashboard.get_most_recent_block_info()
-
-        {Dashboard.list_transfers_formatted(), epoch_number, block_number}
+        load_dashboard_data()
       else
-        {[], "", ""}
+        load_dashboard_data()
       end
 
     {:ok,
@@ -24,6 +22,12 @@ defmodule WatcherWeb.DashboardLive.Index do
      |> assign(:block_number, block_number)
      |> assign(:transactions, txs)
      |> assign(:last_updated_at, last_updated_at())}
+  end
+
+  defp load_dashboard_data do
+    {epoch_number, block_number} = Dashboard.get_most_recent_block_info()
+
+    {Dashboard.list_transfers_formatted(), epoch_number, block_number}
   end
 
   @impl true
