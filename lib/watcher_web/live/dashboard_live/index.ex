@@ -46,6 +46,8 @@ defmodule WatcherWeb.DashboardLive.Index do
       ([{address, amount, timestamp}] ++ txs)
       |> Enum.slice(0, 50)
 
+    send(self(), :reset_counter)
+
     {:noreply,
      socket
      |> assign(:transactions, all_txs)
@@ -61,11 +63,18 @@ defmodule WatcherWeb.DashboardLive.Index do
          } = _block},
         socket
       ) do
+    send(self(), :reset_counter)
+
     {:noreply,
      socket
      |> assign(:epoch_number, epoch_number)
      |> assign(:block_number, block_number)
      |> assign(:last_updated_at, last_updated_at())}
+  end
+
+  @impl true
+  def handle_info(:reset_counter, socket) do
+    {:noreply, push_event(socket, "resetCounter", %{})}
   end
 
   defp last_updated_at do
