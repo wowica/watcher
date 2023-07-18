@@ -29,7 +29,7 @@ Hooks.timer = {
   mounted() {
     this.secondsAgo = 0;
 
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.secondsAgo += 1;
       for (let el of lastUpdatedElements) {
         el.innerHTML = `${this.secondsAgo} seconds ago`;
@@ -39,9 +39,11 @@ Hooks.timer = {
     this.handleEvent("resetCounter", () => {
       this.secondsAgo = 0;
     });
+  },
+  destroyed() {
+    this.interval && clearInterval(this.interval);
   }
-
-}
+};
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
