@@ -47,7 +47,9 @@
     <span class="inline-block sm:text-sml font-extrabold tracking-tight dark:text-slate-200 mb-10">
       Last updated:
     </span>
-    <span class="sm:text-xs dark:text-slate-200"><%= @last_updated_at %></span>
+    <span phx-hook="timer" id="timer-1" class="last-updated sm:text-xs dark:text-slate-200">
+      0 seconds ago
+    </span>
   </div>
 </div>
 
@@ -60,7 +62,9 @@
     <span class="px-4 inline-block font-bold tracking-tight dark:text-slate-100 text-sm">
       Last updated:
     </span>
-    <span class="text-xs dark:text-slate-200"><%= @last_updated_at %></span>
+    <span phx-hook="timer" id="timer-2" class="last-updated sm:text-xs dark:text-slate-200">
+      0 seconds ago
+    </span>
   </div>
 </div>
 
