@@ -33,4 +33,5 @@ The main page for the dashboard is a LiveView which is a subscriber to PubSub. U
 
 ## Tests
 
-Running tests depends on Redis. More info TBD.
+Running tests depends on Redis.  
+More info TBD.
