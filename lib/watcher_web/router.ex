@@ -14,16 +14,24 @@ defmodule WatcherWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :private_metrics do
+    import WatcherWeb.BasicAuthPlug
+    plug :basic_auth, should_bypass: Mix.env() in [:dev, :test]
+  end
+
   scope "/", WatcherWeb do
     pipe_through :browser
 
     live "/", DashboardLive.Index, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", WatcherWeb do
-  #   pipe_through :api
-  # end
+  scope "/metrics" do
+    import Phoenix.LiveDashboard.Router
+
+    pipe_through [:browser, :private_metrics]
+
+    live_dashboard "/dashboard", metrics: WatcherWeb.Telemetry
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:watcher, :dev_routes) do
@@ -32,12 +40,10 @@ defmodule WatcherWeb.Router do
     # If your application does not have an admins-only section yet,
     # you can use Plug.BasicAuth to set up some basic authentication
     # as long as you are also using SSL (which you should anyway).
-    import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: WatcherWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
