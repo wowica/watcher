@@ -1,6 +1,7 @@
 defmodule Watcher.StreamConsumer do
   use GenServer
 
+  alias Watcher.TxBuffer
   alias Watcher.TxParser
 
   require Logger
@@ -20,14 +21,15 @@ defmodule Watcher.StreamConsumer do
 
   def handle_continue(:listen, %{host: host, stream_name: stream_name} = state) do
     {:ok, conn} = Redix.start_link(host)
+    {:ok, tx_buffer_pid} = TxBuffer.start_link()
 
-    Redix.Stream.Consumer.start_link(conn, stream_name, {__MODULE__, :consume, []})
+    Redix.Stream.Consumer.start_link(conn, stream_name, {__MODULE__, :consume, [tx_buffer_pid]})
 
     {:noreply, state}
   end
 
-  def consume(_stream, _id, payload),
-    do: TxParser.parse(payload)
+  def consume(pid, _stream, _id, payload),
+    do: TxParser.parse(payload, pid)
 
   defp redis_host do
     Application.fetch_env!(:watcher, __MODULE__)

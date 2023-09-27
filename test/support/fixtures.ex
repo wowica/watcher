@@ -21,6 +21,8 @@ defmodule Watcher.Fixtures do
     |> Transfer.changeset(%{
       receiving_address: "addr_test123123123",
       amount: 123_123_123,
+      utxo:
+        "#{:crypto.hash(:sha256, Integer.to_string(Enum.random(1..10))) |> Base.encode16()}##{Enum.random(0..5)}",
       timestamp: DateTime.utc_now() |> DateTime.to_unix()
     })
     |> Repo.insert!()

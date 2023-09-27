@@ -13,20 +13,21 @@ defmodule Watcher.Dashboard do
     Phoenix.PubSub.subscribe(PubSub, @pub_sub_topic)
   end
 
-  def broadcast_tx_update(%Transfer{} = tx) do
+  def broadcast_txs_update(txs) when is_list(txs) do
     Phoenix.PubSub.broadcast(
       Watcher.PubSub,
       @pub_sub_topic,
-      {:tx_updated, tx}
+      {:txs_updated, txs}
     )
   end
 
-  def create_transfer!(address, amount, timestamp) do
+  def create_transfer!(address, amount, timestamp, utxo) do
     %Transfer{}
     |> Transfer.changeset(%{
       receiving_address: address,
       amount: amount,
-      timestamp: timestamp
+      timestamp: timestamp,
+      utxo: utxo
     })
     |> Repo.insert!()
   end

@@ -1,28 +1,37 @@
 defmodule Watcher.TxParser do
-  alias Watcher.Dashboard
   require Logger
 
-  def parse(%{"txoutput" => content} = _payload) do
+  alias Watcher.Dashboard
+  alias Watcher.TxBuffer
+
+  def parse(%{"txoutput" => content} = _payload, buffer_pid) do
     %{
       "tx_output" => %{
         "address" => address,
         "amount" => amount
       },
       "context" => %{
-        "timestamp" => timestamp
+        "timestamp" => timestamp,
+        "tx_hash" => tx_hash,
+        "output_idx" => output_idx
       }
     } = Jason.decode!(content)
 
-    Dashboard.create_transfer!(address, amount, timestamp)
-    |> Dashboard.broadcast_tx_update()
+    # Logger.info(inspect(payload))
 
-    Dashboard.trim_records()
+    utxo = "#{tx_hash}##{output_idx}"
+    tx = Dashboard.create_transfer!(address, amount, timestamp, utxo)
+
+    TxBuffer.add_tx(buffer_pid, tx, fn txs ->
+      Dashboard.broadcast_txs_update(txs)
+      Dashboard.trim_records()
+    end)
 
     # Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA at #{timestamp}")
     :ok
   end
 
-  def parse(%{"block" => block_content}) do
+  def parse(%{"block" => block_content}, _buffer_pid) do
     %{"block" => block_params} = Jason.decode!(block_content)
 
     Dashboard.create_block!(block_params)
@@ -33,7 +42,7 @@ defmodule Watcher.TxParser do
     :ok
   end
 
-  def parse(_) do
+  def parse(_payload, _pid) do
     :ok
   end
 

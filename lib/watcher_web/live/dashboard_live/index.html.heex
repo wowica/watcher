@@ -85,8 +85,8 @@
         </tr>
       </thead>
       <tbody>
-        <%= for {address, amount, timestamp} <- @transactions do %>
-          <tr class="dark:bg-slate-800">
+        <%= for {address, amount, utxo, timestamp} <- @transactions do %>
+          <tr id={utxo} class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
               <a
                 href={"https://cexplorer.io/address/#{address}/tx"}
