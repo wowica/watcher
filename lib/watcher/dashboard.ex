@@ -69,7 +69,7 @@ defmodule Watcher.Dashboard do
   def list_transfers_formatted do
     Transfer
     |> Repo.all()
-    |> Enum.map(&{&1.receiving_address, &1.amount, &1.timestamp})
+    |> Enum.map(&{&1.receiving_address, &1.amount, &1.utxo, &1.timestamp})
   end
 
   def get_most_recent_block_info do
