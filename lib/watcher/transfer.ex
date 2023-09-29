@@ -5,6 +5,7 @@ defmodule Watcher.Transfer do
   schema "transfers" do
     field :amount, :integer
     field :receiving_address, :string
+    field :utxo, :string
     field :timestamp, :integer
 
     timestamps()
@@ -13,7 +14,7 @@ defmodule Watcher.Transfer do
   @doc false
   def changeset(transfer, attrs) do
     transfer
-    |> cast(attrs, [:receiving_address, :amount, :timestamp])
-    |> validate_required([:receiving_address, :amount, :timestamp])
+    |> cast(attrs, [:receiving_address, :amount, :utxo, :timestamp])
+    |> validate_required([:receiving_address, :amount, :utxo, :timestamp])
   end
 end

@@ -21,7 +21,7 @@ defmodule WatcherWeb.DashboardLive.Index do
      |> assign(:epoch_number, epoch_number)
      |> assign(:block_number, block_number)
      |> assign(:transactions, txs)
-     |> assign(:last_updated_at, last_updated_at())}
+     |> assign(:last_updated_at, last_updated_at()), temporary_assigns: [transactions: []]}
   end
 
   defp load_dashboard_data do
@@ -32,25 +32,14 @@ defmodule WatcherWeb.DashboardLive.Index do
 
   @impl true
   def handle_info(
-        {:tx_updated,
-         %Watcher.Transfer{
-           receiving_address: address,
-           amount: amount,
-           timestamp: timestamp
-         } = _tx},
+        {:txs_updated, recent_txs},
         socket
       ) do
-    txs = socket.assigns.transactions
-
-    all_txs =
-      ([{address, amount, timestamp}] ++ txs)
-      |> Enum.slice(0, 50)
-
     send(self(), :reset_counter)
 
     {:noreply,
      socket
-     |> assign(:transactions, all_txs)
+     |> update(:transactions, fn _txs -> recent_txs end)
      |> assign(:last_updated_at, last_updated_at())}
   end
 

@@ -1,4 +1,8 @@
 defmodule Watcher.Dashboard do
+  @moduledoc """
+  This module is the context module for dealing with database
+  read/writes and pub-sub communcation.
+  """
   import Ecto.Query
 
   alias Watcher.Block
@@ -13,20 +17,21 @@ defmodule Watcher.Dashboard do
     Phoenix.PubSub.subscribe(PubSub, @pub_sub_topic)
   end
 
-  def broadcast_tx_update(%Transfer{} = tx) do
+  def broadcast_txs_update(txs) when is_list(txs) do
     Phoenix.PubSub.broadcast(
       Watcher.PubSub,
       @pub_sub_topic,
-      {:tx_updated, tx}
+      {:txs_updated, txs}
     )
   end
 
-  def create_transfer!(address, amount, timestamp) do
+  def create_transfer!(address, amount, timestamp, utxo) do
     %Transfer{}
     |> Transfer.changeset(%{
       receiving_address: address,
       amount: amount,
-      timestamp: timestamp
+      timestamp: timestamp,
+      utxo: utxo
     })
     |> Repo.insert!()
   end
@@ -66,9 +71,11 @@ defmodule Watcher.Dashboard do
   end
 
   def list_transfers_formatted do
-    Transfer
+    from(t in Transfer,
+      order_by: [desc: :inserted_at]
+    )
     |> Repo.all()
-    |> Enum.map(&{&1.receiving_address, &1.amount, &1.timestamp})
+    |> Enum.map(&{&1.receiving_address, &1.amount, &1.utxo, &1.timestamp})
   end
 
   def get_most_recent_block_info do

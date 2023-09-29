@@ -1,28 +1,37 @@
 defmodule Watcher.TxParser do
+  @moduledoc """
+  Parses transactions coming from Oura and dispatches them to the rest of the app.
+  """
   alias Watcher.Dashboard
-  require Logger
+  alias Watcher.TxBuffer
 
-  def parse(%{"txoutput" => content} = _payload) do
+  def parse(%{"txoutput" => content} = _payload, buffer_pid) do
     %{
       "tx_output" => %{
         "address" => address,
         "amount" => amount
       },
       "context" => %{
-        "timestamp" => timestamp
+        "timestamp" => timestamp,
+        "tx_hash" => tx_hash,
+        "output_idx" => output_idx
       }
     } = Jason.decode!(content)
 
-    Dashboard.create_transfer!(address, amount, timestamp)
-    |> Dashboard.broadcast_tx_update()
+    utxo = "#{tx_hash}##{output_idx}"
+    tx = Dashboard.create_transfer!(address, amount, timestamp, utxo)
 
-    Dashboard.trim_records()
+    TxBuffer.add_tx(buffer_pid, tx, fn _all_txs_in_the_buffer ->
+      Dashboard.trim_records()
 
-    # Logger.info("Address #{address} received #{div(amount, 1_000_000)} ADA at #{timestamp}")
+      Dashboard.list_transfers_formatted()
+      |> Dashboard.broadcast_txs_update()
+    end)
+
     :ok
   end
 
-  def parse(%{"block" => block_content}) do
+  def parse(%{"block" => block_content}, _buffer_pid) do
     %{"block" => block_params} = Jason.decode!(block_content)
 
     Dashboard.create_block!(block_params)
@@ -33,7 +42,7 @@ defmodule Watcher.TxParser do
     :ok
   end
 
-  def parse(_) do
+  def parse(_payload, _pid) do
     :ok
   end
 
