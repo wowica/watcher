@@ -1,4 +1,8 @@
 defmodule Watcher.TxBuffer do
+  @moduledoc """
+  Buffers data coming in from Redis stream to avoid overloading
+  the LiveView socket with too much data at once.
+  """
   use Agent
 
   @default_opts [buffer_size: 15, name: __MODULE__]

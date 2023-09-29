@@ -21,7 +21,7 @@ defmodule Watcher.TxParser do
     utxo = "#{tx_hash}##{output_idx}"
     tx = Dashboard.create_transfer!(address, amount, timestamp, utxo)
 
-    TxBuffer.add_tx(buffer_pid, tx, fn _txs ->
+    TxBuffer.add_tx(buffer_pid, tx, fn _all_txs_in_the_buffer ->
       Dashboard.trim_records()
 
       Dashboard.list_transfers_formatted()

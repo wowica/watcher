@@ -1,4 +1,8 @@
 defmodule Watcher.Dashboard do
+  @moduledoc """
+  This module is the context module for dealing with database
+  read/writes and pub-sub communcation.
+  """
   import Ecto.Query
 
   alias Watcher.Block
