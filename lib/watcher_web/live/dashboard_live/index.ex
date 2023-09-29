@@ -32,21 +32,9 @@ defmodule WatcherWeb.DashboardLive.Index do
 
   @impl true
   def handle_info(
-        {:txs_updated, txs},
+        {:txs_updated, recent_txs},
         socket
       ) do
-    recent_txs =
-      Enum.map(txs, fn transfer ->
-        %Watcher.Transfer{
-          receiving_address: address,
-          amount: amount,
-          utxo: utxo,
-          timestamp: timestamp
-        } = transfer
-
-        {address, amount, utxo, timestamp}
-      end)
-
     send(self(), :reset_counter)
 
     {:noreply,

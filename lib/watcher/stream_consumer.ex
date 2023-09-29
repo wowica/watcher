@@ -1,4 +1,8 @@
 defmodule Watcher.StreamConsumer do
+  @moduledoc """
+  Connects to the Redis stream and initializes the TxBuffer process.
+  Reads raw data from the stream and passes it along to TxParser.
+  """
   use GenServer
 
   alias Watcher.TxBuffer

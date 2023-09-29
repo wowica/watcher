@@ -67,7 +67,9 @@ defmodule Watcher.Dashboard do
   end
 
   def list_transfers_formatted do
-    Transfer
+    from(t in Transfer,
+      order_by: [desc: :inserted_at]
+    )
     |> Repo.all()
     |> Enum.map(&{&1.receiving_address, &1.amount, &1.utxo, &1.timestamp})
   end

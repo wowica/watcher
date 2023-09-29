@@ -1,43 +1,25 @@
 defmodule Watcher.TxBuffer do
-  use GenServer
+  use Agent
 
-  @default_opts [buffer_size: 50, name: __MODULE__]
+  @default_opts [buffer_size: 15, name: __MODULE__]
 
   def start_link(initial_opts \\ []) do
     opts = Keyword.merge(@default_opts, initial_opts)
-
-    GenServer.start_link(__MODULE__, opts[:buffer_size], name: opts[:name])
+    Agent.start_link(fn -> {opts[:buffer_size], []} end, name: opts[:name])
   end
 
   def add_tx(pid, tx, func) do
-    GenServer.cast(pid, {:add_tx, tx, func})
+    Agent.update(pid, fn
+      {buffer_size, all_txs} when length(all_txs) < buffer_size - 1 ->
+        {buffer_size, [tx | all_txs]}
+
+      {buffer_size, all_txs} ->
+        func.([tx | all_txs])
+        {buffer_size, []}
+    end)
   end
 
   def get_txs(pid) do
-    GenServer.call(pid, :get_txs)
-  end
-
-  @impl true
-  def init(buffer_size) do
-    # State is a tuple
-    initial_state = {buffer_size, _buffer_elements = []}
-    {:ok, initial_state}
-  end
-
-  @impl true
-  def handle_call(:get_txs, _from, {_buffer_size, txs} = state) do
-    {:reply, txs, state}
-  end
-
-  @impl true
-  def handle_cast({:add_tx, tx, func}, {buffer_size, all_txs} = _state) do
-    new_txs = [tx | all_txs]
-
-    if length(new_txs) >= buffer_size do
-      func.(new_txs)
-      {:noreply, {buffer_size, []}}
-    else
-      {:noreply, {buffer_size, new_txs}}
-    end
+    Agent.get(pid, fn {_buffer_size, txs} -> txs end)
   end
 end
