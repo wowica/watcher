@@ -116,6 +116,10 @@ if config_env() == :prod do
   config :watcher, Watcher.StreamConsumer,
     redis_host: System.fetch_env!("REDIS_HOST"),
     redis_stream_name: System.fetch_env!("REDIS_STREAM_NAME")
+
+  config :watcher, :basic_auth,
+    username: System.get_env("BAUTH_USERNAME", "fruit"),
+    password: System.get_env("BAUTH_PASSWORD", "banana")
 end
 
 if config_env() != :test do
