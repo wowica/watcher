@@ -14,7 +14,7 @@ A Dashboard for monitoring Cardano addresses. Reads chain data from a Redis stre
 
 For the time being, it simply displays addresses receiving ADA along with the amount of the transfer.
 
-![](docs/screenshot-2023-07-12.png)
+![](docs/screenshot.png)
 
 ## Architecture
 
