@@ -20,7 +20,7 @@
 
 <div class="sm:block md:hidden mb-2">
   <div class="flex p-4 bg-dracula-darker-800 rounded">
-    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-1">
       Epoch
     </h1>
     <span class="ml-3 text-3xl">
@@ -29,7 +29,7 @@
   </div>
 
   <div class="flex mt-2 p-4 bg-dracula-darker-800 rounded">
-    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-1">
       Height
     </h1>
     <span class="ml-3 text-3xl">
@@ -53,14 +53,13 @@
   </div>
 </div>
 
-<div class="sm:block md:hidden mb-5">
-  <h1 class="px-4 inline-block text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-5 ">
+<div class="md:hidden flex items-center p-3">
+  <h1 class="px-2 text-md font-extrabold tracking-tight dark:text-slate-200 mb-5 mt-5">
     Transactions
   </h1>
-
-  <div>
-    <span class="px-4 inline-block font-bold tracking-tight dark:text-slate-100 text-sm">
-      Last updated:
+  <div class="ml-auto flex flex-col">
+    <span class="px-4 font-bold tracking-tight dark:text-slate-100 text-xs ">
+      Last updated
     </span>
     <span phx-hook="timer" id="timer-2" class="last-updated sm:text-xs dark:text-slate-200">
       0 seconds ago
@@ -69,83 +68,75 @@
 </div>
 
 <div class="hidden md:block relative rounded-xl overflow-auto">
-  <div class="shadow-sm overflow-hidden my-8">
+  <table class="border-collapse table-auto w-full text-sm">
+    <thead>
+      <tr>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+          Receiving Address
+        </th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+          Amount
+        </th>
+        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+          Date (UTC)
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= for {address, amount, utxo, timestamp} <- @transactions do %>
+        <tr id={utxo} class="dark:bg-slate-800">
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
+            <a
+              href={"https://cexplorer.io/address/#{address}/tx"}
+              class="hover:underline"
+              target="_blank"
+            >
+              <%= ViewHelper.format_address(address) %>
+            </a>
+          </td>
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 dark:text-slate-400">
+            <%= ViewHelper.format_amount(amount) %> ₳
+          </td>
+          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
+            <%= ViewHelper.format_date(timestamp) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="md:hidden sm:overflow-auto sm:relative">
+  <div class="shadow-sm overflow-hidden my-2">
     <table class="border-collapse table-auto w-full text-sm">
       <thead>
         <tr>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
-            Receiving Address
+          <th class="border-b dark:border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
+            Address
           </th>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+          <th class="border-b dark:border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
             Amount
-          </th>
-          <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
-            Date (UTC)
           </th>
         </tr>
       </thead>
       <tbody>
-        <%= for {address, amount, utxo, timestamp} <- @transactions do %>
-          <tr id={utxo} class="dark:bg-slate-800">
+        <%= for {address, amount, utxo, _timestamp} <- @transactions do %>
+          <tr id={"sm" <> utxo} class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
               <a
                 href={"https://cexplorer.io/address/#{address}/tx"}
                 class="hover:underline"
                 target="_blank"
               >
-                <%= ViewHelper.format_address(address) %>
+                <%= ViewHelper.format_address(address, true) %>
               </a>
             </td>
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 dark:text-slate-400">
-              <%= ViewHelper.format_amount(amount) %> ADA
-            </td>
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
-              <%= ViewHelper.format_date(timestamp) %>
+              <%= ViewHelper.format_amount(amount) %> ₳
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
-</div>
-
-<div class="md:hidden sm:overflow-auto sm:relative">
-  <table class="table-fixed">
-    <tbody>
-      <%= for {address, amount, timestamp} <- @transactions do %>
-        <tr class="dark:bg-slate-800 flex flex-col">
-          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400 text-small">
-            <div>
-              <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
-                Receiving Address:
-              </span>
-              <a
-                href={"https://cexplorer.io/address/#{address}/tx"}
-                class="hover:underline"
-                target="_blank"
-              >
-                <%= ViewHelper.format_address(address) %>
-              </a>
-            </div>
-            <div class="mt-2">
-              <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
-                Amount:
-              </span>
-              <span class="font-bold">
-                <%= ViewHelper.format_amount(amount) %> ADA
-              </span>
-            </div>
-            <div class="mt-2">
-              <span class="dark:border-slate-600 pt-0 pb-3 text-slate-400 dark:text-slate-200 font-bold">
-                Date (UTC):
-              </span>
-              <span class="font-bold">
-                <%= ViewHelper.format_date(timestamp) %>
-              </span>
-            </div>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
 </div>
