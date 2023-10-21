@@ -3,8 +3,16 @@ defmodule WatcherWeb.ViewHelper do
   This module defines helper functions for formatting view content
   """
 
-  def format_address(full_address) do
-    String.slice(full_address, 0..15) <> "..." <> String.slice(full_address, -15..-1)
+  def format_address(full_address, is_sm \\ false) do
+    range =
+      if is_sm do
+        {0..10, -8..-1}
+      else
+        {0..15, -15..-1}
+      end
+
+    String.slice(full_address, elem(range, 0)) <>
+      "..." <> String.slice(full_address, elem(range, 1))
   end
 
   def format_amount(amount_in_lovelace) do
