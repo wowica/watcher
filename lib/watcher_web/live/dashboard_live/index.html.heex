@@ -120,7 +120,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= for {address, amount, utxo, timestamp} <- @transactions do %>
+        <%= for {address, amount, utxo, _timestamp} <- @transactions do %>
           <tr id={"sm" <> utxo} class="dark:bg-slate-800">
             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
               <a
