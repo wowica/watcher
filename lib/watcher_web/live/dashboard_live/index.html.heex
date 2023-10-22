@@ -19,20 +19,17 @@
 </div>
 
 <div class="sm:block md:hidden mb-2">
-  <div class="flex p-4 bg-dracula-darker-800 rounded">
-    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-1">
+  <div class="flex justify-center p-2 bg-dracula-darker-800 rounded">
+    <h1 class="text-md font-extrabold tracking-tight text-slate-200 mb-1">
       Epoch
     </h1>
-    <span class="ml-3 text-3xl">
+    <span class="ml-2 text-md">
       <%= @epoch_number %>
     </span>
-  </div>
-
-  <div class="flex mt-2 p-4 bg-dracula-darker-800 rounded">
-    <h1 class="text-3xl font-extrabold tracking-tight dark:text-slate-200 mb-1">
+    <h1 class="ml-7 text-md font-extrabold tracking-tight text-slate-200 mb-1">
       Height
     </h1>
-    <span class="ml-3 text-3xl">
+    <span class="ml-2 text-md">
       <%= @block_number %>
     </span>
   </div>
@@ -43,11 +40,11 @@
     Transactions
   </h2>
 
-  <div>
-    <span class="inline-block sm:text-sml font-extrabold tracking-tight dark:text-slate-200 mb-10">
-      Last updated:
+  <div class="ml-auto flex flex-col">
+    <span class="inline-block sm:text-lg font-extrabold tracking-tight dark:text-slate-200 w-max">
+      Last updated
     </span>
-    <span phx-hook="timer" id="timer-1" class="last-updated sm:text-xs dark:text-slate-200">
+    <span phx-hook="timer" id="timer-1" class="last-updated sm:text-sml dark:text-slate-200">
       0 seconds ago
     </span>
   </div>
@@ -58,7 +55,7 @@
     Transactions
   </h1>
   <div class="ml-auto flex flex-col">
-    <span class="px-4 font-bold tracking-tight dark:text-slate-100 text-xs ">
+    <span class="px-4 font-bold tracking-tight dark:text-slate-100 text-xs w-max">
       Last updated
     </span>
     <span phx-hook="timer" id="timer-2" class="last-updated sm:text-xs dark:text-slate-200">
@@ -111,18 +108,18 @@
     <table class="border-collapse table-auto w-full text-sm">
       <thead>
         <tr>
-          <th class="border-b dark:border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
+          <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
             Address
           </th>
-          <th class="border-b dark:border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
+          <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
             Amount
           </th>
         </tr>
       </thead>
       <tbody>
         <%= for {address, amount, utxo, _timestamp} <- @transactions do %>
-          <tr id={"sm" <> utxo} class="dark:bg-slate-800">
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
+          <tr id={"sm" <> utxo} class="bg-slate-800">
+            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
               <a
                 href={"https://cexplorer.io/address/#{address}/tx"}
                 class="hover:underline"
@@ -131,7 +128,7 @@
                 <%= ViewHelper.format_address(address, true) %>
               </a>
             </td>
-            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 dark:text-slate-400">
+            <td class="border-b border-slate-700 p-4 pl-18 text-slate-400">
               <%= ViewHelper.format_amount(amount) %> ₳
             </td>
           </tr>
