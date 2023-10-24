@@ -64,76 +64,53 @@
   </div>
 </div>
 
-<div class="hidden md:block relative rounded-xl overflow-auto">
+<div class="relative rounded-xl overflow-auto">
   <table class="border-collapse table-auto w-full text-sm">
     <thead>
-      <tr>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+      <tr class="hidden md:table-row">
+        <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
           Receiving Address
         </th>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+        <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
           Amount
         </th>
-        <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
+        <th class="border-b border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-left">
           Date (UTC)
         </th>
       </tr>
+      <tr class="md:hidden table-row">
+        <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
+          Address
+        </th>
+        <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
+          Amount
+        </th>
+      </tr>
     </thead>
-    <tbody>
-      <%= for {address, amount, utxo, timestamp} <- @transactions do %>
-        <tr id={utxo} class="dark:bg-slate-800">
-          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
-            <a
-              href={"https://cexplorer.io/address/#{address}/tx"}
-              class="hover:underline"
-              target="_blank"
-            >
+    <tbody id="transactions" phx-update="stream">
+      <tr
+        :for={{dom_id, {address, amount, _utxo, timestamp}} <- @streams.transactions}
+        id={dom_id}
+        class="dark:bg-slate-800 md:dark:bg-slate-800"
+      >
+        <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
+          <a
+            href={"https://cexplorer.io/address/#{address}/tx"}
+            class="hover:underline flex"
+            target="_blank"
+          >
+            <span class="w-32 truncate md:w-max">
               <%= ViewHelper.format_address(address) %>
-            </a>
-          </td>
-          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-18 dark:text-slate-400">
-            <%= ViewHelper.format_amount(amount) %> ₳
-          </td>
-          <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 dark:text-slate-400">
-            <%= ViewHelper.format_date(timestamp) %>
-          </td>
-        </tr>
-      <% end %>
+            </span>
+          </a>
+        </td>
+        <td class="border-b border-slate-700 p-4 pl-18 text-slate-400">
+          <%= ViewHelper.format_amount(amount) %> ₳
+        </td>
+        <td class="hidden md:table-cell border-b  border-slate-700 p-4 pl-8 text-slate-400">
+          <%= ViewHelper.format_date(timestamp) %>
+        </td>
+      </tr>
     </tbody>
   </table>
-</div>
-
-<div class="md:hidden sm:overflow-auto sm:relative">
-  <div class="shadow-sm overflow-hidden my-2">
-    <table class="border-collapse table-auto w-full text-sm">
-      <thead>
-        <tr>
-          <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
-            Address
-          </th>
-          <th class="border-b border-slate-600 font-large p-4 pl-8 pt-0 pb-3 text-left">
-            Amount
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= for {address, amount, utxo, _timestamp} <- @transactions do %>
-          <tr id={"sm" <> utxo} class="bg-slate-800">
-            <td class="border-b border-slate-700 p-4 pl-8 text-slate-400">
-              <a
-                href={"https://cexplorer.io/address/#{address}/tx"}
-                class="hover:underline"
-                target="_blank"
-              >
-                <%= ViewHelper.format_address(address, true) %>
-              </a>
-            </td>
-            <td class="border-b border-slate-700 p-4 pl-18 text-slate-400">
-              <%= ViewHelper.format_amount(amount) %> ₳
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
 </div>

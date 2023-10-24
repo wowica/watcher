@@ -16,12 +16,15 @@ defmodule WatcherWeb.DashboardLive.Index do
         load_dashboard_data()
       end
 
-    {:ok,
-     socket
-     |> assign(:epoch_number, epoch_number)
-     |> assign(:block_number, block_number)
-     |> assign(:transactions, txs)
-     |> assign(:last_updated_at, last_updated_at()), temporary_assigns: [transactions: []]}
+    {
+      :ok,
+      socket
+      |> assign(:epoch_number, epoch_number)
+      |> assign(:block_number, block_number)
+      |> assign(:last_updated_at, last_updated_at())
+      |> stream_configure(:transactions, dom_id: &"#{elem(&1, 2)}")
+      |> stream(:transactions, txs)
+    }
   end
 
   defp load_dashboard_data do
@@ -39,8 +42,8 @@ defmodule WatcherWeb.DashboardLive.Index do
 
     {:noreply,
      socket
-     |> update(:transactions, fn _txs -> recent_txs end)
-     |> assign(:last_updated_at, last_updated_at())}
+     |> assign(:last_updated_at, last_updated_at())
+     |> stream(:transactions, recent_txs, reset: true)}
   end
 
   @impl true
